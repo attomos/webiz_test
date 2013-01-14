@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    
+        <title>Index</title>
+        
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var socket = io.connect('http://localhost');
+            var text = $('#text');
+
+            socket.on('connect', function() {
+                text.html('connected');
+            });
+
+            socket.on('message', function(msg) {
+                console.log(msg);
+                var message = JSON.stringify(msg);
+                message = JSON.parse(message);
+                text.html(message.data);
+                setTimeout(function() {
+                    socket.emit('requestMore', {});
+                }, 1000);
+            });
+            socket.on('news', function(data) {
+                console.log(data);
+                text.html(data);
+                socket.emit('my other event', { my: 'data' });
+            });
+        });
+    </script>
+    </head>
+    <body>
+        <p id='text'>
+        wtf
+        </p>
+    </body>
+</html>
