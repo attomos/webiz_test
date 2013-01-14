@@ -5,37 +5,78 @@
     
         <title>Index</title>
         
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            var socket = io.connect('http://localhost');
-            var text = $('#text');
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="jquery-1.8.3.min.js"></script>
+        <script src="flot/jquery.flot.js"></script>
+        <script>
+            $(document).ready(function() {
+                var socket = io.connect('http://localhost');
+                var text = $('#text');
 
-            socket.on('connect', function() {
-                text.html('connected');
-            });
+                socket.on('connect', function() {
+                    // text.html('connected');
+                });
 
-            socket.on('message', function(msg) {
-                console.log(msg);
-                var message = JSON.stringify(msg);
-                message = JSON.parse(message);
-                text.html(message.data);
-                setTimeout(function() {
-                    socket.emit('requestMore', {});
-                }, 1000);
+
+                var data = [], totalPoints = 300;
+                socket.on('message', function(msg) {
+                    console.log(msg);
+                    var message = JSON.stringify(msg);
+                    message = JSON.parse(message);
+                    // alert(message.data.length);
+                    var oop = "";
+                    for (var i in message.data) {
+                        oop += JSON.stringify(message.data[i].key) +
+                        JSON.stringify(message.data[i].value) + "<br />";
+                    }
+                    //text.html(oop);
+                    if (message.data.length > 0) {
+                        var kbPerSec = Math.floor(message.data[0].value / 1024);
+                        data.push(kbPerSec);
+                        text.html(message.data[0].key + "<br />" +
+                                kbPerSec +
+                                " kB/s");
+                    }
+
+                    function getData() {
+                        var replace = data[data.length - 1];
+                        if (data.length > 1)
+                            data = data.slice(1);
+
+                        while (data.length < totalPoints) {
+                            var prev = data.length > 0 ?
+                                    data[data.length - 1] : replace; 
+                            data.push(prev);
+                        }
+                        
+                        var res = [];
+                        for (var i = 0; i < data.length; ++i)
+                            res.push([i, data[i]]);
+
+                        return res;
+                    }
+                    var updateInterval = 30;
+                    var options = {
+                        series: { shadowSize: 0 },
+                        yaxis: { min: 0, max: 5000 },
+                        xaxis: { show: false }
+                    };
+                    var plot = $.plot($("#placeholder"),
+                            [ getData() ],
+                            options);
+
+                    setTimeout(function() {
+                            plot.setData([ getData() ]);
+                            plot.draw();
+                        socket.emit('requestMore', {});
+                    }, updateInterval);
+                });
             });
-            socket.on('news', function(data) {
-                console.log(data);
-                text.html(data);
-                socket.emit('my other event', { my: 'data' });
-            });
-        });
-    </script>
+        </script>
     </head>
     <body>
-        <p id='text'>
-        wtf
-        </p>
+        <p id='text'></p>
+        <div id="placeholder" style="width: 600px; height: 150px">
+        </div>   
     </body>
 </html>
