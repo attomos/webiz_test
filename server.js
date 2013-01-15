@@ -116,9 +116,6 @@ io.sockets.on('connection', function(socket) {
         socket.emit('message', { data: sumDownload} );
     });
 
-    socket.on('my other event', function(data) {
-        console.log(data);
-    });
 });
 
 function compareString(str1, str2) {

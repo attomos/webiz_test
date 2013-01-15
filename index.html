@@ -11,7 +11,7 @@
         <script>
             $(document).ready(function() {
                 var socket = io.connect('http://localhost');
-                var text = $('#text');
+                var text = $('#ip1');
 
                 socket.on('connect', function() {
                     // text.html('connected');
@@ -19,6 +19,10 @@
 
 
                 var data = [], totalPoints = 300;
+                var data2 = [], data3 = [], data4 = [],
+                    data5 = [], data6 = [], data7 = [],
+                    data8 = [], data9 = [], data10 = [];
+
                 socket.on('message', function(msg) {
                     console.log(msg);
                     var message = JSON.stringify(msg);
@@ -75,7 +79,7 @@
         </script>
     </head>
     <body>
-        <p id='text'></p>
+        <p id='ip1'></p>
         <div id="placeholder" style="width: 600px; height: 150px">
         </div>   
     </body>
