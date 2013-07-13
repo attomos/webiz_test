@@ -11,7 +11,16 @@
         <script>
             $(document).ready(function() {
                 var socket = io.connect('http://localhost');
-                var text = $('#ip1');
+                var text = $('#ip');
+                var text2 = $('#ip2');
+                var text3 = $('#ip3');
+                var text4 = $('#ip4');
+                var text5 = $('#ip5');
+                var text6 = $('#ip6');
+                var text7 = $('#ip7');
+                var text8 = $('#ip8');
+                var text9 = $('#ip9');
+                var text10 = $('#ip10');
 
                 socket.on('connect', function() {
                     // text.html('connected');
@@ -27,22 +36,71 @@
                     console.log(msg);
                     var message = JSON.stringify(msg);
                     message = JSON.parse(message);
-                    // alert(message.data.length);
+                    alert(message.data.length);
                     var oop = "";
                     for (var i in message.data) {
                         oop += JSON.stringify(message.data[i].key) +
                         JSON.stringify(message.data[i].value) + "<br />";
                     }
-                    //text.html(oop);
-                    if (message.data.length > 0) {
-                        var kbPerSec = Math.floor(message.data[0].value / 1024);
-                        data.push(kbPerSec);
-                        text.html(message.data[0].key + "<br />" +
-                                kbPerSec +
-                                " kB/s");
+                    text.html(oop);
+                    for (var i in message.data) {
+                        var kb = Math.floor(message.data[i].value / 1024);
+                        alert(i);
+                        switch (i) {
+                            case 1:
+                                data.push(kb);
+                                text.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 2:
+                                data2.push(kb);
+                                text2.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 3:
+                                data3.push(kb);
+                                text3.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 4:
+                                data4.push(kb);
+                                text4.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 5:
+                                data5.push(kb);
+                                text5.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 6:
+                                data6.push(kb);
+                                text6.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 7:
+                                data7.push(kb);
+                                text7.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 8:
+                                data8.push(kb);
+                                text8.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 9:
+                                data9.push(kb);
+                                text9.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                            case 10:
+                                data10.push(kb);
+                                text10.html(message.data[i].key + "<br />" +
+                                        kb + " kB/s");
+                                break;
+                        }
                     }
 
-                    function getData() {
+                    function getData(data) {
                         var replace = data[data.length - 1];
                         if (data.length > 1)
                             data = data.slice(1);
@@ -66,12 +124,18 @@
                         xaxis: { show: false }
                     };
                     var plot = $.plot($("#placeholder"),
-                            [ getData() ],
+                            [ getData(data) ],
+                            options);
+
+                    var plot2 = $.plot($("#placeholder2"),
+                            [ getData(data2) ],
                             options);
 
                     setTimeout(function() {
-                            plot.setData([ getData() ]);
+                            plot.setData([ getData(data) ]);
                             plot.draw();
+                            // plot2.setData([ getData(data2) ]);
+                            // plot2.draw();
                         socket.emit('requestMore', {});
                     }, updateInterval);
                 });
@@ -79,8 +143,26 @@
         </script>
     </head>
     <body>
-        <p id='ip1'></p>
+        <p id='ip'></p>
         <div id="placeholder" style="width: 600px; height: 150px">
+        <p id='ip2'></p>
+        <div id="placeholder2" style="width: 600px; height: 150px">
+        <p id='ip3'></p>
+        <div id="placeholder3" style="width: 600px; height: 150px">
+        <p id='ip4'></p>
+        <div id="placeholder4" style="width: 600px; height: 150px">
+        <p id='ip5'></p>
+        <div id="placeholder5" style="width: 600px; height: 150px">
+        <p id='ip6'></p>
+        <div id="placeholder6" style="width: 600px; height: 150px">
+        <p id='ip7'></p>
+        <div id="placeholder7" style="width: 600px; height: 150px">
+        <p id='ip8'></p>
+        <div id="placeholder8" style="width: 600px; height: 150px">
+        <p id='ip9'></p>
+        <div id="placeholder9" style="width: 600px; height: 150px">
+        <p id='ip10'></p>
+        <div id="placeholder10" style="width: 600px; height: 150px">
         </div>   
     </body>
 </html>
